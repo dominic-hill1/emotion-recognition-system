@@ -1,10 +1,29 @@
-# Import library
+# Import libraries
 import cv2
+import tensorflow as tf
+import tensorflow_hub as hub
+
+# Check library versions
+print("Tensorflow version= {}".format(tf.__version__))
+print("Tensorflow Hub version= {}".format(hub.__version__))
+
+# Load model
+def load_model(model_path):
+  """
+  Loads a saved model from a specified path.
+  """
+  print(f"Loading saved model from: {model_path}")
+  model = tf.keras.models.load_model(model_path,
+                                     custom_objects={"KerasLayer": hub.KerasLayer})
+  return model
+
+model = load_model("20220821-12521661086371-full-image-set-mobilenetv2-Adam.h5")
 
 # Load cascade classifier into memory
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 # Initialise video capture 
 cap = cv2.VideoCapture(0)
+
 
 while 1:
     ret, frame = cap.read() # take frame from webcam
@@ -12,7 +31,7 @@ while 1:
     faces = face_cascade.detectMultiScale( # Pass into classifier
         grayscale,
         scaleFactor=1.2,
-        minNeighbours=5,
+        minNeighbors=5,
         minSize=(50,50)
     )
 
