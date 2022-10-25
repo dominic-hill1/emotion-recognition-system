@@ -2,6 +2,7 @@
 import cv2
 import tensorflow as tf
 import tensorflow_hub as hub
+import numpy as np
 
 # Check library versions
 print("Tensorflow version= {}".format(tf.__version__))
@@ -32,11 +33,15 @@ def process_image(greyscale_image):
 
 model = load_model("20220821-12521661086371-full-image-set-mobilenetv2-Adam.h5")
 
+true_values = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
+
 # Load cascade classifier into memory
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 # Initialise video capture 
 cap = cv2.VideoCapture(0)
 
+delay_counter = 1
+grey_face = False
 
 while 1:
     ret, frame = cap.read() # take frame from webcam
@@ -52,15 +57,28 @@ while 1:
 
     for (x, y, w, h) in faces: # Iterate over faces detected 
         cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2) # draw rectangle around face
-        # roi_gray = grayscale[y:y + h, x:x + w]
-        # roi_color = img[y:y + h, x:x + w]
+
+        grey_face = greyscale[y:y+h, x:x+w] # crop face
+    
+    # print(delay_counter)
+
+
+    if delay_counter % 60 == 0 and hasattr(grey_face, 'shape'):
+        grey_face = process_image(grey_face)
+        predictions = model.predict(np.array([grey_face]))
+        print(true_values[np.argmax(predictions)])
+
 
     cv2.imshow('Face recognition', frame) # update webcam output
+    delay_counter += 1
 
     k = cv2.waitKey(30) & 0xff
     if k == 27: # close if esc is pressed
         break
 
+    
+
 cap.release()
 cv2.destroyAllWindows()
 
+print(predictions)
