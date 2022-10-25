@@ -17,6 +17,19 @@ def load_model(model_path):
                                      custom_objects={"KerasLayer": hub.KerasLayer})
   return model
 
+def process_image(greyscale_image):
+    """
+    Formats an image, ready to be passed into neural network
+    """
+    # Converts 1 greyscale channel into 3 identical RGB channels
+    greyscale_image = cv2.cvtColor(greyscale_image,cv2.COLOR_GRAY2RGB)
+    # Changes values from 0-255 to 0-1
+    normalized_image = tf.image.convert_image_dtype(greyscale_image, tf.float32)
+    # Changes size of image to 244x244 pixels
+    formatted_image = tf.image.resize(normalized_image, size=[224, 224])
+
+    return formatted_image
+
 model = load_model("20220821-12521661086371-full-image-set-mobilenetv2-Adam.h5")
 
 # Load cascade classifier into memory
@@ -27,9 +40,10 @@ cap = cv2.VideoCapture(0)
 
 while 1:
     ret, frame = cap.read() # take frame from webcam
-    grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # convert to greyscale
-    faces = face_cascade.detectMultiScale( # Pass into classifier
-        grayscale,
+    greyscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # convert to greyscale
+    # Pass into classifier
+    faces = face_cascade.detectMultiScale(
+        greyscale,
         scaleFactor=1.2,
         minNeighbors=5,
         minSize=(50,50)
@@ -49,3 +63,4 @@ while 1:
 
 cap.release()
 cv2.destroyAllWindows()
+
