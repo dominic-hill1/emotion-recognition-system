@@ -64,9 +64,12 @@ while 1:
 
 
     if delay_counter % 60 == 0 and hasattr(grey_face, 'shape'):
-        grey_face = process_image(grey_face)
-        predictions = model.predict(np.array([grey_face]))
-        print(true_values[np.argmax(predictions)])
+        try:
+            grey_face = process_image(grey_face)
+            predictions = model.predict(np.array([grey_face]))
+            print(true_values[np.argmax(predictions)])
+        except:
+            pass
 
 
     cv2.imshow('Face recognition', frame) # update webcam output
