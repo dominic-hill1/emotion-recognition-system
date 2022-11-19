@@ -63,7 +63,7 @@ class LiveApplication(tk.Frame):
 
         emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
-        for i in range(1, 8):
+        for i in range(1, 16):
             self.rowconfigure(i, weight=1)
         
         self.columnconfigure(1, weight=2)
@@ -77,31 +77,102 @@ class LiveApplication(tk.Frame):
         subheader.config(font=("Courier", 25))
         subheader.grid(row=0, column=2, sticky='ew')
 
-        for rowNum, emotion in enumerate(emotions):
-            emotion = ttk.Progressbar(
-                self,
-                orient='horizontal',
-                mode='determinate',
-                length=280,
-                value=40,
-            )
+        angerLabel = tk.Label(self, text='Anger') # instantiate a label for emotion
+        angerLabel.grid(column=2, row=1, padx=30, pady=5, sticky='nsew') # put label in correct position
 
-            emotion.grid(column=2, row=rowNum+1, padx=30, pady=20)
+        self.angerBar = ttk.Progressbar( # instantiate a progress bar for emotion
+            self,
+            orient='horizontal',
+            mode='determinate',
+            length=280,
+            value=40,
+        )
+        self.angerBar.grid(column=2, row=2, padx=30, pady=5, sticky="s") # put progress bar in correct position
+
+        disgustLabel = tk.Label(self, text='Disgust')
+        disgustLabel.grid(column=2, row=3, padx=30, pady=5, sticky='nsew')
+
+        self.disgustBar = ttk.Progressbar(
+            self,
+            orient='horizontal',
+            mode='determinate',
+            length=280,
+            value=40,
+        )
+        self.disgustBar.grid(column=2, row=4, padx=30, pady=5, sticky="s")
+
+        fearLabel = tk.Label(self, text='Fear')
+        fearLabel.grid(column=2, row=5, padx=30, pady=5, sticky='nsew')
+        self.fearBar = ttk.Progressbar(
+            self,
+            orient='horizontal',
+            mode='determinate',
+            length=280,
+            value=40,
+        )
+        self.fearBar.grid(column=2, row=6, padx=30, pady=5, sticky="s")
+
+        happyLabel = tk.Label(self, text='Happy')
+        happyLabel.grid(column=2, row=7, padx=30, pady=5, sticky='nsew')
+        self.happyBar = ttk.Progressbar(
+            self,
+            orient='horizontal',
+            mode='determinate',
+            length=280,
+            value=40,
+        )
+        self.happyBar.grid(column=2, row=8, padx=30, pady=5, sticky='s')
+
+        neutralLabel = tk.Label(self, text='Neutral')
+        neutralLabel.grid(column=2, row=9, padx=30, pady=5, sticky='nsew')
+        self.neutralBar = ttk.Progressbar(
+            self,
+            orient='horizontal',
+            mode='determinate',
+            length=280,
+            value=40,
+        )
+        self.neutralBar.grid(column=2, row=10, padx=30, pady=5, sticky="s")
+
+        sadLabel = tk.Label(self, text='Sad')
+        sadLabel.grid(column=2, row=11, padx=30, pady=5, sticky='nsew')
+        self.sadBar = ttk.Progressbar(
+            self,
+            orient='horizontal',
+            mode='determinate',
+            length=280,
+            value=40,
+        )
+        self.sadBar.grid(column=2, row=12, padx=30, pady=5, sticky="s")
+
+        surpriseLabel = tk.Label(self, text='Surprise')
+        surpriseLabel.grid(column=2, row=13, padx=30, pady=5, sticky='nsew')
+        self.surpriseBar = ttk.Progressbar(
+            self,
+            orient='horizontal',
+            mode='determinate',
+            length=280,
+            value=40,
+        )
+        self.surpriseBar.grid(column=2, row=14, padx=30, pady=5, sticky="s")
+
+        # TODO: change color of progress bars
+
 
         vidMain = tk.Label(self)
-        vidMain.grid(row=1, sticky='nw', rowspan=7)
+        vidMain.grid(row=1, sticky='nw', rowspan=15)
 
         button = tk.Button(self, text="Visit menu",
                             command=lambda: controller.show_frame(Menu))
-        button.grid(row=8, sticky='sw')
+        button.grid(row=16, sticky='sw')
 
 
 
 
-        # model = self.load_model("20220821-12521661086371-full-image-set-mobilenetv2-Adam.h5")
+        model = self.load_model("20220821-12521661086371-full-image-set-mobilenetv2-Adam.h5")
 
-        # # Load cascade classifier into memory
-        # face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        # Load cascade classifier into memory
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
         cap = cv2.VideoCapture(0)
         self.delay_counter = 1
@@ -117,31 +188,39 @@ class LiveApplication(tk.Frame):
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) # create image to show to user
             greyscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # convert to greyscale
 
-            # # Pass into classifier
-            # faces = face_cascade.detectMultiScale(
-            #     greyscale,
-            #     scaleFactor=1.2,
-            #     minNeighbors=5,
-            #     minSize=(50,50)
-            # )
+            # Pass into classifier
+            faces = face_cascade.detectMultiScale(
+                greyscale,
+                scaleFactor=1.2,
+                minNeighbors=5,
+                minSize=(50,50)
+            )
         
-            # for (x, y, w, h) in faces: # Iterate over faces detected 
-            #     # self.overlay = frame.copy()
-            #     cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2) # draw rectangle around face
-            #     cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) # create new image to show to user
+            for (x, y, w, h) in faces: # Iterate over faces detected 
+                # self.overlay = frame.copy()
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2) # draw rectangle around face
+                cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) # create new image to show to user
 
-            #     self.grey_face = greyscale[y:y+h, x:x+w] # crop face
+                self.grey_face = greyscale[y:y+h, x:x+w] # crop face
             
                 
-            # if self.delay_counter % 60 == 0 and hasattr(self.grey_face, 'shape'):
-            #     try:
-            #         self.grey_face = self.process_image(self.grey_face)
-            #         predictions = model.predict(np.array([self.grey_face]))
-            #         print(emotions[np.argmax(predictions)])
-            #     except:
-            #         pass
+            if self.delay_counter % 60 == 0 and hasattr(self.grey_face, 'shape'):
+                try:
+                    self.grey_face = self.process_image(self.grey_face)
+                    predictions = model.predict(np.array([self.grey_face]))
+                    print(predictions)
+                    self.angerBar['value'] = predictions[0][0] * 100
+                    self.disgustBar['value'] = predictions[0][1] * 100
+                    self.fearBar['value'] = predictions[0][2] * 100
+                    self.happyBar['value'] = predictions[0][3] * 100
+                    self.neutralBar['value'] = predictions[0][4] * 100
+                    self.sadBar['value'] = predictions[0][5] * 100
+                    self.surpriseBar['value'] = predictions[0][6] * 100
+                    print(emotions[np.argmax(predictions)])
+                except:
+                    pass
 
-            # self.delay_counter += 1
+            self.delay_counter += 1
     
             prevImg = Image.fromarray(cv2image)
             imgtk = ImageTk.PhotoImage(image=prevImg)
