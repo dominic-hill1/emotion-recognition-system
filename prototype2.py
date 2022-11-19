@@ -69,12 +69,15 @@ class LiveApplication(tk.Frame):
         self.columnconfigure(1, weight=2)
         self.columnconfigure(2, weight=1)
 
-        header = tk.Label(self, text='Live application')
-        header.config(font=("Courier", 40))
+        # header = tk.Label(self, text='Live application')
+        # header.config(font=("Courier", 40))        
+        header = tk.Label(self, text='Emotion Recognition')
+        header.config(font=("Courier", 30))
         header.grid(row=0, sticky='ew')
 
         subheader = tk.Label(self, text='Emotions:')
-        subheader.config(font=("Courier", 25))
+        # subheader.config(font=("Courier", 25))
+        subheader.config(font=("Courier", 20))
         subheader.grid(row=0, column=2, sticky='ew')
 
         angerLabel = tk.Label(self, text='Anger') # instantiate a label for emotion
@@ -85,7 +88,7 @@ class LiveApplication(tk.Frame):
             orient='horizontal',
             mode='determinate',
             length=280,
-            value=40,
+            value=0,
         )
         self.angerBar.grid(column=2, row=2, padx=30, pady=5, sticky="s") # put progress bar in correct position
 
@@ -97,7 +100,7 @@ class LiveApplication(tk.Frame):
             orient='horizontal',
             mode='determinate',
             length=280,
-            value=40,
+            value=0,
         )
         self.disgustBar.grid(column=2, row=4, padx=30, pady=5, sticky="s")
 
@@ -108,7 +111,7 @@ class LiveApplication(tk.Frame):
             orient='horizontal',
             mode='determinate',
             length=280,
-            value=40,
+            value=0,
         )
         self.fearBar.grid(column=2, row=6, padx=30, pady=5, sticky="s")
 
@@ -119,7 +122,7 @@ class LiveApplication(tk.Frame):
             orient='horizontal',
             mode='determinate',
             length=280,
-            value=40,
+            value=0,
         )
         self.happyBar.grid(column=2, row=8, padx=30, pady=5, sticky='s')
 
@@ -130,7 +133,7 @@ class LiveApplication(tk.Frame):
             orient='horizontal',
             mode='determinate',
             length=280,
-            value=40,
+            value=0,
         )
         self.neutralBar.grid(column=2, row=10, padx=30, pady=5, sticky="s")
 
@@ -141,7 +144,7 @@ class LiveApplication(tk.Frame):
             orient='horizontal',
             mode='determinate',
             length=280,
-            value=40,
+            value=0,
         )
         self.sadBar.grid(column=2, row=12, padx=30, pady=5, sticky="s")
 
@@ -152,7 +155,7 @@ class LiveApplication(tk.Frame):
             orient='horizontal',
             mode='determinate',
             length=280,
-            value=40,
+            value=0,
         )
         self.surpriseBar.grid(column=2, row=14, padx=30, pady=5, sticky="s")
 
