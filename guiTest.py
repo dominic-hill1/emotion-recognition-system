@@ -38,11 +38,11 @@ class Menu(tk.Frame):
         header.config(font=("Courier", 40))
         header.pack(pady=10, padx=10)
         
-        button = tk.Button(self, text="Visit Page 1",
+        button = tk.Button(self, text="Visit Live app",
                             command=lambda: controller.show_frame(LiveApplication))
         button.pack()
 
-        button2 = tk.Button(self, text="Visit Page 2",
+        button2 = tk.Button(self, text="Visit Data analysis",
                             command=lambda: controller.show_frame(Analysis))
         button2.pack()
 
