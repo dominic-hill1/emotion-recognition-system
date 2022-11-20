@@ -7,12 +7,14 @@ import tensorflow_hub as hub
 import numpy as np
 import pandas as pd
 import datetime
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        # self.recordsDF = pd.read_csv("records.csv")
+
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand = True)
@@ -43,6 +45,8 @@ class App(tk.Tk):
 
         if cont == LiveApplication:
             self.geometry("1000x600")
+        elif cont == Analysis:
+            self.geometry("900x600")
         else:
             self.geometry("400x200")
 
@@ -212,26 +216,23 @@ class LiveApplication(tk.Frame):
             
                 
             if self.delay_counter % 60 == 0 and hasattr(self.grey_face, 'shape'):
-                # try:
-                self.grey_face = self.process_image(self.grey_face)
-                predictions = model.predict(np.array([self.grey_face]))
-                # print(predictions)
-                self.angerBar['value'] = predictions[0][0] * 100
-                self.disgustBar['value'] = predictions[0][1] * 100
-                self.fearBar['value'] = predictions[0][2] * 100
-                self.happyBar['value'] = predictions[0][3] * 100
-                self.neutralBar['value'] = predictions[0][4] * 100
-                self.sadBar['value'] = predictions[0][5] * 100
-                self.surpriseBar['value'] = predictions[0][6] * 100
-                # print(emotions[np.argmax(predictions)])
-                record = pd.DataFrame([[emotions[np.argmax(predictions)], datetime.datetime.now()]],
-                                        columns=["emotion", "datetime"])
-                print(record)
-                # controller.recordsDF.append(record, ignore_index=True)
-                # print(controller.recordsDF)
-                record.to_csv('records.csv', mode='a', index=False, header=False)
-                # except:
-                #     pass
+                try:
+                    self.grey_face = self.process_image(self.grey_face)
+                    predictions = model.predict(np.array([self.grey_face]))
+                    # print(predictions)
+                    self.angerBar['value'] = predictions[0][0] * 100
+                    self.disgustBar['value'] = predictions[0][1] * 100
+                    self.fearBar['value'] = predictions[0][2] * 100
+                    self.happyBar['value'] = predictions[0][3] * 100
+                    self.neutralBar['value'] = predictions[0][4] * 100
+                    self.sadBar['value'] = predictions[0][5] * 100
+                    self.surpriseBar['value'] = predictions[0][6] * 100
+                    # print(emotions[np.argmax(predictions)])
+                    record = pd.DataFrame([[emotions[np.argmax(predictions)], datetime.datetime.now()]],
+                                            columns=["emotion", "datetime"])
+                    record.to_csv('records.csv', mode='a', index=False, header=False)
+                except:
+                    pass
 
             self.delay_counter += 1
     
@@ -278,6 +279,36 @@ class Analysis(tk.Frame):
         header.config(font=("Courier", 40))
         header.pack(pady=10, padx=10)
 
+        self.recordsDF = pd.read_csv("records.csv")
+        self.recordsDF["datetime"] = pd.to_datetime(self.recordsDF["datetime"])
+
+        figure3 = plt.Figure(figsize=(5, 4), dpi=100)
+        ax3 = figure3.add_subplot(111)
+        ax3.scatter(self.recordsDF['datetime'].map(lambda dt: dt.strftime('%Y-%m')), self.recordsDF['emotion'], color='g')
+        scatter3 = FigureCanvasTkAgg(figure3, self)
+        scatter3.get_tk_widget().pack(side=tk.LEFT, padx=40)
+        # scatter3.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+        ax3.set_xlabel('datetime')
+        ax3.set_title('emotions over time')
+
+        # # OO method from scratch
+        # fig, ax = plt.subplots(figsize=(10,6))
+
+        # # Plot the data
+        # scatter = ax.scatter(x=self.recordsDF["datetime"],
+        #                     y=self.recordDF["emotion"]);
+
+        # # Customise
+        # ax.set(title="Emotions over time",
+        #     xlabel="time",
+        #     ylabel="emotion");
+
+        # graph = FigureCanvasTkAgg(fig, self)
+        # graph.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+
+        # # Add a horizontal line
+        # ax.axhline(over_50["chol"].mean(),
+        #         linestyle="dashed");
         
         button = tk.Button(self, text="Visit menu",
                             command=lambda: controller.show_frame(Menu))
