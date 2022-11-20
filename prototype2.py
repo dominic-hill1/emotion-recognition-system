@@ -12,7 +12,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.recordsDF = pd.read_csv("records.csv")
+        # self.recordsDF = pd.read_csv("records.csv")
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand = True)
@@ -212,25 +212,26 @@ class LiveApplication(tk.Frame):
             
                 
             if self.delay_counter % 60 == 0 and hasattr(self.grey_face, 'shape'):
-                try:
-                    self.grey_face = self.process_image(self.grey_face)
-                    predictions = model.predict(np.array([self.grey_face]))
-                    # print(predictions)
-                    self.angerBar['value'] = predictions[0][0] * 100
-                    self.disgustBar['value'] = predictions[0][1] * 100
-                    self.fearBar['value'] = predictions[0][2] * 100
-                    self.happyBar['value'] = predictions[0][3] * 100
-                    self.neutralBar['value'] = predictions[0][4] * 100
-                    self.sadBar['value'] = predictions[0][5] * 100
-                    self.surpriseBar['value'] = predictions[0][6] * 100
-                    # print(emotions[np.argmax(predictions)])
-                    record = pd.DataFrame([emotions[np.argmax(predictions)], datetime.datetime()],
-                                            columns=["emotion", "datetime"])
-                    print(record)
-                    controller.recordsDF.append(record, ignore_index=True)
-                    print(controller.recordsDF)
-                except:
-                    pass
+                # try:
+                self.grey_face = self.process_image(self.grey_face)
+                predictions = model.predict(np.array([self.grey_face]))
+                # print(predictions)
+                self.angerBar['value'] = predictions[0][0] * 100
+                self.disgustBar['value'] = predictions[0][1] * 100
+                self.fearBar['value'] = predictions[0][2] * 100
+                self.happyBar['value'] = predictions[0][3] * 100
+                self.neutralBar['value'] = predictions[0][4] * 100
+                self.sadBar['value'] = predictions[0][5] * 100
+                self.surpriseBar['value'] = predictions[0][6] * 100
+                # print(emotions[np.argmax(predictions)])
+                record = pd.DataFrame([[emotions[np.argmax(predictions)], datetime.datetime.now()]],
+                                        columns=["emotion", "datetime"])
+                print(record)
+                # controller.recordsDF.append(record, ignore_index=True)
+                # print(controller.recordsDF)
+                record.to_csv('records.csv', mode='a', index=False, header=False)
+                # except:
+                #     pass
 
             self.delay_counter += 1
     
@@ -290,8 +291,8 @@ if __name__ == "__main__":
     app = App()
     app.mainloop()
 
-    print(app.recordsDF)
+    # print(app.recordsDF)
 
-    app.recordsDF.to_csv("records.csv")
+    # app.recordsDF.to_csv("records.csv")
 
 
