@@ -5,10 +5,14 @@ from PIL import Image, ImageTk
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
+import pandas as pd
+import datetime
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
+
+        self.recordsDF = pd.read_csv("records.csv")
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand = True)
@@ -211,7 +215,7 @@ class LiveApplication(tk.Frame):
                 try:
                     self.grey_face = self.process_image(self.grey_face)
                     predictions = model.predict(np.array([self.grey_face]))
-                    print(predictions)
+                    # print(predictions)
                     self.angerBar['value'] = predictions[0][0] * 100
                     self.disgustBar['value'] = predictions[0][1] * 100
                     self.fearBar['value'] = predictions[0][2] * 100
@@ -219,7 +223,12 @@ class LiveApplication(tk.Frame):
                     self.neutralBar['value'] = predictions[0][4] * 100
                     self.sadBar['value'] = predictions[0][5] * 100
                     self.surpriseBar['value'] = predictions[0][6] * 100
-                    print(emotions[np.argmax(predictions)])
+                    # print(emotions[np.argmax(predictions)])
+                    record = pd.DataFrame([emotions[np.argmax(predictions)], datetime.datetime()],
+                                            columns=["emotion", "datetime"])
+                    print(record)
+                    controller.recordsDF.append(record, ignore_index=True)
+                    print(controller.recordsDF)
                 except:
                     pass
 
@@ -280,5 +289,9 @@ class Analysis(tk.Frame):
 if __name__ == "__main__":
     app = App()
     app.mainloop()
+
+    print(app.recordsDF)
+
+    app.recordsDF.to_csv("records.csv")
 
 
