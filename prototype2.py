@@ -193,8 +193,6 @@ class LiveApplication(tk.Frame):
     
 
         def display_frame():
-
- 
             _, frame = cap.read() # take frame from webcam
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) # create image to show to user
             greyscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # convert to greyscale
@@ -269,9 +267,6 @@ class LiveApplication(tk.Frame):
 
         return formatted_image
 
-    
-
-
 class Analysis(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -282,33 +277,24 @@ class Analysis(tk.Frame):
         self.recordsDF = pd.read_csv("records.csv")
         self.recordsDF["datetime"] = pd.to_datetime(self.recordsDF["datetime"])
 
-        figure3 = plt.Figure(figsize=(5, 4), dpi=100)
-        ax3 = figure3.add_subplot(111)
-        ax3.scatter(self.recordsDF['datetime'].map(lambda dt: dt.strftime('%Y-%m')), self.recordsDF['emotion'], color='g')
-        scatter3 = FigureCanvasTkAgg(figure3, self)
-        scatter3.get_tk_widget().pack(side=tk.LEFT, padx=40)
+        # figure = plt.Figure(figsize=(5, 4), dpi=100)
+        # ax = figure.add_subplot(111)
+        # ax.scatter(self.recordsDF['datetime'].map(lambda dt: dt.strftime('%Y-%m')), self.recordsDF['emotion'], color='g')
+        # scatter = FigureCanvasTkAgg(figure, self)
+        # scatter.get_tk_widget().pack(side=tk.LEFT, padx=40)
+        # # scatter3.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+        # ax.set_xlabel('datetime')
+        # ax.set_title('emotions over time')
+
+        figure = plt.Figure(figsize=(5, 4), dpi=100)
+        ax = figure.add_subplot(111)
+        ax.scatter(self.recordsDF['datetime'].map(lambda dt: dt.strftime('%Y-%m')), self.recordsDF['emotion'], color='g')
+        scatter = FigureCanvasTkAgg(figure, self)
+        scatter.get_tk_widget().pack(side=tk.LEFT, padx=40)
         # scatter3.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-        ax3.set_xlabel('datetime')
-        ax3.set_title('emotions over time')
+        ax.set_xlabel('datetime')
+        ax.set_title('emotions over time')
 
-        # # OO method from scratch
-        # fig, ax = plt.subplots(figsize=(10,6))
-
-        # # Plot the data
-        # scatter = ax.scatter(x=self.recordsDF["datetime"],
-        #                     y=self.recordDF["emotion"]);
-
-        # # Customise
-        # ax.set(title="Emotions over time",
-        #     xlabel="time",
-        #     ylabel="emotion");
-
-        # graph = FigureCanvasTkAgg(fig, self)
-        # graph.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-
-        # # Add a horizontal line
-        # ax.axhline(over_50["chol"].mean(),
-        #         linestyle="dashed");
         
         button = tk.Button(self, text="Visit menu",
                             command=lambda: controller.show_frame(Menu))
