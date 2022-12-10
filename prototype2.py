@@ -277,35 +277,16 @@ class Analysis(tk.Frame):
         self.recordsDF = pd.read_csv("records.csv")
         self.recordsDF["datetime"] = pd.to_datetime(self.recordsDF["datetime"])
 
-<<<<<<< Updated upstream
-        # figure = plt.Figure(figsize=(5, 4), dpi=100)
-        # ax = figure.add_subplot(111)
-        # ax.scatter(self.recordsDF['datetime'].map(lambda dt: dt.strftime('%Y-%m')), self.recordsDF['emotion'], color='g')
-        # scatter = FigureCanvasTkAgg(figure, self)
-        # scatter.get_tk_widget().pack(side=tk.LEFT, padx=40)
-        # # scatter3.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-        # ax.set_xlabel('datetime')
-        # ax.set_title('emotions over time')
-
-=======
->>>>>>> Stashed changes
         figure = plt.Figure(figsize=(5, 4), dpi=100)
         ax = figure.add_subplot(111)
         ax.scatter(self.recordsDF['datetime'].map(lambda dt: dt.strftime('%Y-%m')), self.recordsDF['emotion'], color='g')
         scatter = FigureCanvasTkAgg(figure, self)
         scatter.get_tk_widget().pack(side=tk.LEFT, padx=40)
-<<<<<<< Updated upstream
-        # scatter3.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-        ax.set_xlabel('datetime')
-        ax.set_title('emotions over time')
-
-=======
         ax.set_xlabel('datetime')
         ax.set_title('emotions over time')
 
         
 
->>>>>>> Stashed changes
         
         button = tk.Button(self, text="Visit menu",
                             command=lambda: controller.show_frame(Menu))
