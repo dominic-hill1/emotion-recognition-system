@@ -289,19 +289,29 @@ class Analysis(tk.Frame):
         happyCounts = groupedTime["emotion"].count()
 
 
-        figure = plt.Figure(figsize=(5, 4))
-        # figure = plt.Figure(figsize=(5, 4), dpi=100)
-        ax = figure.add_subplot(111)
-        # ax.scatter(self.recordsDF['datetime'].map(lambda dt: dt.strftime('%Y-%m')), self.recordsDF['emotion'], color='g')
-        # happyPlot = happyCounts.plot(label="happy", color='g')
-        # sadPlot = sadCounts.plot(label="sad", color='r')
-        ax.plot()
-        plt.legend()
-        scatter = FigureCanvasTkAgg(happyPlot, self)
-        scatter.get_tk_widget().pack(side=tk.LEFT, padx=40)
-        ax.set_xlabel('datetime')
-        ax.set_ylabel('Counts of emotion')
-        ax.set_title('emotions over time')
+        figure, (ax0, ax1) = plt.subplots(nrows=2,
+                                  ncols=1,
+                                  figsize=(10,8),
+                                  sharex=True,
+                                  sharey=True)
+        ax0.set_xlabel('datetime')
+        ax0.set_ylabel('Counts of emotion')
+        ax0.set_title('Happiness over time')
+
+        ax1.set_xlabel('datetime')
+        ax1.set_ylabel('Counts of emotion')
+        ax1.set_title('Sadness over time')
+
+        # happyCounts.plot(label="happy", color='g')
+        ax0.plot(sadCounts, color="g")
+        ax1.plot(happyCounts, color="r")
+
+        # plt.legend()
+        graph = FigureCanvasTkAgg(figure, self)
+        graph.get_tk_widget().pack(side=tk.LEFT, padx=40)
+        # ax.set_xlabel('datetime')
+        # ax.set_ylabel('Counts of emotion')
+        # ax.set_title('emotions over time')
 
         
 
