@@ -46,7 +46,7 @@ class App(tk.Tk):
         if cont == LiveApplication:
             self.geometry("1000x600")
         elif cont == Analysis:
-            self.geometry("900x600")
+            self.geometry("1920x1080")
         else:
             self.geometry("400x200")
 
@@ -291,20 +291,20 @@ class Analysis(tk.Frame):
 
         figure, (ax0, ax1) = plt.subplots(nrows=2,
                                   ncols=1,
-                                  figsize=(10,8),
-                                  sharex=True,
+                                  figsize=(2, 3),
+                                  sharex=False,
                                   sharey=True)
         ax0.set_xlabel('datetime')
-        ax0.set_ylabel('Counts of emotion')
-        ax0.set_title('Happiness over time')
+        ax0.set_ylabel('Happiness')
+        ax0.set_title('Emotion over time')
 
         ax1.set_xlabel('datetime')
-        ax1.set_ylabel('Counts of emotion')
-        ax1.set_title('Sadness over time')
+        ax1.set_ylabel('Sadness')
+        # ax1.set_title('Sadness over time')
 
         # happyCounts.plot(label="happy", color='g')
-        ax0.plot(sadCounts, color="g")
-        ax1.plot(happyCounts, color="r")
+        ax0.plot(happyCounts, color="g")
+        ax1.plot(sadCounts, color="r")
 
         # plt.legend()
         graph = FigureCanvasTkAgg(figure, self)
