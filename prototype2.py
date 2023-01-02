@@ -272,10 +272,12 @@ class Analysis(tk.Frame):
         tk.Frame.__init__(self, parent)
         header = tk.Label(self, text='Data Analysis')
         header.config(font=("Courier", 40))
+        # header.pack(pady=10, padx=10)
         header.pack(pady=10, padx=10)
 
         self.recordsDF = pd.read_csv("records.csv")
         self.recordsDF["datetime"] = pd.to_datetime(self.recordsDF["datetime"])
+        # self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%m/%d/%y")
         self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%H:%M")
 
         sadDF = self.recordsDF[self.recordsDF["emotion"]=="sad"]
@@ -291,7 +293,7 @@ class Analysis(tk.Frame):
 
         figure, (ax0, ax1) = plt.subplots(nrows=2,
                                   ncols=1,
-                                  figsize=(2, 3),
+                                  figsize=(5,4),
                                   sharex=False,
                                   sharey=True)
         ax0.set_xlabel('datetime')
@@ -306,9 +308,15 @@ class Analysis(tk.Frame):
         ax0.plot(happyCounts, color="g")
         ax1.plot(sadCounts, color="r")
 
+        plt.gcf().subplots_adjust(bottom=0.15)
+
+        # plt.xticks(rotation='vertical')
+        # plt.xticks(rotation=45)
+
+
         # plt.legend()
         graph = FigureCanvasTkAgg(figure, self)
-        graph.get_tk_widget().pack(side=tk.LEFT, padx=40)
+        graph.get_tk_widget().pack(side=tk.LEFT, padx=40, pady=40)
         # ax.set_xlabel('datetime')
         # ax.set_ylabel('Counts of emotion')
         # ax.set_title('emotions over time')
@@ -316,13 +324,58 @@ class Analysis(tk.Frame):
         
 
         
-        button = tk.Button(self, text="Visit menu",
+        menuButton = tk.Button(self, text="Visit menu",
                             command=lambda: controller.show_frame(Menu))
-        button.pack()
+        menuButton.pack()
 
-        button2 = tk.Button(self, text="Visit live application",
+        liveButton = tk.Button(self, text="Visit live application",
                             command=lambda: controller.show_frame(LiveApplication))
-        button2.pack()
+        liveButton.pack()
+
+        emotionOptions = ["Happy",
+                          "Sad",
+                          "Angry",
+                          "Neutral",
+                          "Disgust",
+                          "Fear",
+                          "Surprise"]
+
+        timeOptions = ["Hour:Minute",
+                       "Day/Month/Year",
+                       "Day",
+                       "Month",
+                       "Year"]
+        
+        firstHeader = tk.Label(self, text="Pick your first emotion:")
+        firstHeader.pack()
+        self.firstEmotion = tk.StringVar()
+        self.firstEmotion.set("Happy")
+        dropdown1 = tk.OptionMenu(self, self.firstEmotion, *emotionOptions)
+        dropdown1.pack()
+
+        secondHeader = tk.Label(self, text="Pick your second emotion:")
+        secondHeader.pack()
+        self.secondEmotion = tk.StringVar()
+        self.secondEmotion.set("Sad")
+        dropdown2 = tk.OptionMenu(self, self.secondEmotion, *emotionOptions)
+        dropdown2.pack()
+
+        timeHeader = tk.Label(self, text="Pick a time format")
+        timeHeader.pack()
+        self.selectedTime = tk.StringVar()
+        self.selectedTime.set("Day/Month/Year")
+        dropdownTime = tk.OptionMenu(self, self.selectedTime, *timeOptions)
+        dropdownTime.pack()
+
+        updateButton = tk.Button(self, text="Update graphs", command=self.updateGraphs)
+        updateButton.pack()
+
+    def updateGraphs(self):
+        print(self.firstEmotion.get())
+        print(self.secondEmotion.get())
+        print(self.selectedTime.get())
+
+
 
 if __name__ == "__main__":
     app = App()
