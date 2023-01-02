@@ -375,7 +375,6 @@ class Analysis(tk.Frame):
             self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%d/%m/%y")
         elif self.selectedTime.get() == "Hour:Minute":
             self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%H:%M")
-            print("1")
         elif self.selectedTime.get() == "Day":
             self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%d")
         elif self.selectedTime.get() == "Month":
