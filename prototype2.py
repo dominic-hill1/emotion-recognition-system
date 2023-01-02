@@ -383,45 +383,63 @@ class Analysis(tk.Frame):
         elif self.selectedTime.get() == "Year":
             self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%y")
         
-            
+        if self.firstEmotion.get() == "Happy":
+            firstDF = self.recordsDF[self.recordsDF["emotion"]=="happy"]
+        elif self.firstEmotion.get() == "Sad":
+            firstDF = self.recordsDF[self.recordsDF["emotion"]=="sad"]
+        elif self.firstEmotion.get() == "Angry":
+            firstDF = self.recordsDF[self.recordsDF["emotion"]=="angry"]
+        elif self.firstEmotion.get() == "Neutral":
+            firstDF = self.recordsDF[self.recordsDF["emotion"]=="neutral"]
+        elif self.firstEmotion.get() == "Disgust":
+            firstDF = self.recordsDF[self.recordsDF["emotion"]=="disgust"]
+        elif self.firstEmotion.get() == "Fear":
+            firstDF = self.recordsDF[self.recordsDF["emotion"]=="fear"]
+        elif self.firstEmotion.get() == "Surprise":
+            firstDF = self.recordsDF[self.recordsDF["emotion"]=="surprise"]
 
-
-        sadDF = self.recordsDF[self.recordsDF["emotion"]=="sad"]
-        groupedTime = sadDF.groupby('datetime')
+    
+        groupedTime = firstDF.groupby('datetime')
         groupedTime.head()
-        sadCounts = groupedTime["emotion"].count()
+        firstCounts = groupedTime["emotion"].count()
 
-        happyDF = self.recordsDF[self.recordsDF["emotion"]=="happy"]
-        groupedTime = happyDF.groupby('datetime')
+        if self.secondEmotion.get() == "Happy":
+            secondDF = self.recordsDF[self.recordsDF["emotion"]=="happy"]
+        elif self.secondEmotion.get() == "Sad":
+            secondDF = self.recordsDF[self.recordsDF["emotion"]=="sad"]
+        elif self.secondEmotion.get() == "Angry":
+            secondDF = self.recordsDF[self.recordsDF["emotion"]=="angry"]
+        elif self.secondEmotion.get() == "Neutral":
+            secondDF = self.recordsDF[self.recordsDF["emotion"]=="neutral"]
+        elif self.secondEmotion.get() == "Disgust":
+            secondDF = self.recordsDF[self.recordsDF["emotion"]=="disgust"]
+        elif self.secondEmotion.get() == "Fear":
+            secondDF = self.recordsDF[self.recordsDF["emotion"]=="fear"]
+        elif self.secondEmotion.get() == "Surprise":
+            secondDF = self.recordsDF[self.recordsDF["emotion"]=="surprise"] 
+
+        groupedTime = secondDF.groupby('datetime')
         groupedTime.head()
-        happyCounts = groupedTime["emotion"].count()
+        secondCounts = groupedTime["emotion"].count()
 
         self.graphWidget.destroy()
-
         self.figure, (self.ax0, self.ax1) = plt.subplots(nrows=2,
                                   ncols=1,
                                   figsize=(5,4),
                                   sharex=False,
                                   sharey=True)
         self.ax0.set_xlabel('datetime')
-        self.ax0.set_ylabel('Happiness')
+        self.ax0.set_ylabel(self.firstEmotion.get())
         self.ax0.set_title('Emotion over time')
 
         self.ax1.set_xlabel('datetime')
-        self.ax1.set_ylabel('Sadness')
-        # ax1.set_title('Sadness over time')
+        self.ax1.set_ylabel(self.secondEmotion.get())
 
-        # happyCounts.plot(label="happy", color='g')
-        self.ax0.plot(happyCounts, color="g")
-        self.ax1.plot(sadCounts, color="r")
+        self.ax0.plot(firstCounts, color="g")
+        self.ax1.plot(secondCounts, color="r")
 
         plt.gcf().subplots_adjust(bottom=0.15)
 
-        # plt.xticks(rotation='vertical')
-        # plt.xticks(rotation=45)
-
-
-        # plt.legend()
         self.graph = FigureCanvasTkAgg(self.figure, self)
         self.graphWidget = self.graph.get_tk_widget()
         self.graphWidget.grid(row=2, column=1, padx=0, pady=40, rowspan=15)
