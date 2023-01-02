@@ -270,43 +270,36 @@ class LiveApplication(tk.Frame):
 class Analysis(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+
+        for i in range(1, 16):
+            self.rowconfigure(i, weight=1)
+        
+        self.columnconfigure(1, weight=1)
+        self.columnconfigure(2, weight=1)
         header = tk.Label(self, text='Data Analysis')
         header.config(font=("Courier", 40))
         # header.pack(pady=10, padx=10)
-        header.pack(pady=10, padx=10)
-
-        self.recordsDF = pd.read_csv("records.csv")
-        self.recordsDF["datetime"] = pd.to_datetime(self.recordsDF["datetime"])
-        # self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%m/%d/%y")
-        self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%H:%M")
-
-        sadDF = self.recordsDF[self.recordsDF["emotion"]=="sad"]
-        groupedTime = sadDF.groupby('datetime')
-        groupedTime.head()
-        sadCounts = groupedTime["emotion"].count()
-
-        happyDF = self.recordsDF[self.recordsDF["emotion"]=="happy"]
-        groupedTime = happyDF.groupby('datetime')
-        groupedTime.head()
-        happyCounts = groupedTime["emotion"].count()
+        header.grid(column=1, row=1, pady=10, padx=10, columnspan=2)
 
 
-        figure, (ax0, ax1) = plt.subplots(nrows=2,
-                                  ncols=1,
-                                  figsize=(5,4),
-                                  sharex=False,
-                                  sharey=True)
-        ax0.set_xlabel('datetime')
-        ax0.set_ylabel('Happiness')
-        ax0.set_title('Emotion over time')
+        # self.updateGraphs()
 
-        ax1.set_xlabel('datetime')
-        ax1.set_ylabel('Sadness')
+        self.figure, (self.ax0, self.ax1) = plt.subplots(nrows=2,
+                            ncols=1,
+                            figsize=(5,4),
+                            sharex=False,
+                            sharey=True)
+        self.ax0.set_xlabel('datetime')
+        self.ax0.set_ylabel('Happiness')
+        self.ax0.set_title('Emotion over time')
+
+        self.ax1.set_xlabel('datetime')
+        self.ax1.set_ylabel('Sadness')
         # ax1.set_title('Sadness over time')
 
         # happyCounts.plot(label="happy", color='g')
-        ax0.plot(happyCounts, color="g")
-        ax1.plot(sadCounts, color="r")
+        # self.ax0.plot(happyCounts, color="g")
+        # self.ax1.plot(sadCounts, color="r")
 
         plt.gcf().subplots_adjust(bottom=0.15)
 
@@ -315,22 +308,20 @@ class Analysis(tk.Frame):
 
 
         # plt.legend()
-        graph = FigureCanvasTkAgg(figure, self)
-        graph.get_tk_widget().pack(side=tk.LEFT, padx=40, pady=40)
-        # ax.set_xlabel('datetime')
-        # ax.set_ylabel('Counts of emotion')
-        # ax.set_title('emotions over time')
+        self.graph = FigureCanvasTkAgg(self.figure, self)
+        self.graphWidget = self.graph.get_tk_widget()
+        self.graphWidget.grid(row=2, column=1, padx=0, pady=40, rowspan=15)
 
-        
+        # self.recordsDF = pd.read_csv("records.csv")
+        # self.recordsDF["datetime"] = pd.to_datetime(self.recordsDF["datetime"])
 
-        
         menuButton = tk.Button(self, text="Visit menu",
                             command=lambda: controller.show_frame(Menu))
-        menuButton.pack()
+        menuButton.grid(column=2, row=2, sticky='n')
 
         liveButton = tk.Button(self, text="Visit live application",
                             command=lambda: controller.show_frame(LiveApplication))
-        liveButton.pack()
+        liveButton.grid(column=2, row=3, sticky='n')
 
         emotionOptions = ["Happy",
                           "Sad",
@@ -347,33 +338,93 @@ class Analysis(tk.Frame):
                        "Year"]
         
         firstHeader = tk.Label(self, text="Pick your first emotion:")
-        firstHeader.pack()
         self.firstEmotion = tk.StringVar()
         self.firstEmotion.set("Happy")
         dropdown1 = tk.OptionMenu(self, self.firstEmotion, *emotionOptions)
-        dropdown1.pack()
 
         secondHeader = tk.Label(self, text="Pick your second emotion:")
-        secondHeader.pack()
         self.secondEmotion = tk.StringVar()
         self.secondEmotion.set("Sad")
         dropdown2 = tk.OptionMenu(self, self.secondEmotion, *emotionOptions)
-        dropdown2.pack()
+        
 
         timeHeader = tk.Label(self, text="Pick a time format")
-        timeHeader.pack()
         self.selectedTime = tk.StringVar()
         self.selectedTime.set("Day/Month/Year")
         dropdownTime = tk.OptionMenu(self, self.selectedTime, *timeOptions)
-        dropdownTime.pack()
+        
 
         updateButton = tk.Button(self, text="Update graphs", command=self.updateGraphs)
-        updateButton.pack()
+        
+
+        # self.updateGraphs()
+        
+        firstHeader.grid(column=2, row=4)
+        dropdown1.grid(column=2, row=5)
+        secondHeader.grid(column=2, row=6)
+        dropdown2.grid(column=2, row=7)
+        timeHeader.grid(column=2, row=8)
+        dropdownTime.grid(column=2, row=9)
+        updateButton.grid(column=2, row=10)
+
 
     def updateGraphs(self):
-        print(self.firstEmotion.get())
-        print(self.secondEmotion.get())
-        print(self.selectedTime.get())
+        self.recordsDF = pd.read_csv("records.csv")
+        self.recordsDF["datetime"] = pd.to_datetime(self.recordsDF["datetime"])
+        if self.selectedTime.get() == "Day/Month/Year":
+            self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%d/%m/%y")
+        elif self.selectedTime.get() == "Hour:Minute":
+            self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%H:%M")
+            print("1")
+        elif self.selectedTime.get() == "Day":
+            self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%d")
+        elif self.selectedTime.get() == "Month":
+            self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%m")
+        elif self.selectedTime.get() == "Year":
+            self.recordsDF['datetime'] = self.recordsDF['datetime'].dt.strftime("%y")
+        
+            
+
+
+        sadDF = self.recordsDF[self.recordsDF["emotion"]=="sad"]
+        groupedTime = sadDF.groupby('datetime')
+        groupedTime.head()
+        sadCounts = groupedTime["emotion"].count()
+
+        happyDF = self.recordsDF[self.recordsDF["emotion"]=="happy"]
+        groupedTime = happyDF.groupby('datetime')
+        groupedTime.head()
+        happyCounts = groupedTime["emotion"].count()
+
+        self.graphWidget.destroy()
+
+        self.figure, (self.ax0, self.ax1) = plt.subplots(nrows=2,
+                                  ncols=1,
+                                  figsize=(5,4),
+                                  sharex=False,
+                                  sharey=True)
+        self.ax0.set_xlabel('datetime')
+        self.ax0.set_ylabel('Happiness')
+        self.ax0.set_title('Emotion over time')
+
+        self.ax1.set_xlabel('datetime')
+        self.ax1.set_ylabel('Sadness')
+        # ax1.set_title('Sadness over time')
+
+        # happyCounts.plot(label="happy", color='g')
+        self.ax0.plot(happyCounts, color="g")
+        self.ax1.plot(sadCounts, color="r")
+
+        plt.gcf().subplots_adjust(bottom=0.15)
+
+        # plt.xticks(rotation='vertical')
+        # plt.xticks(rotation=45)
+
+
+        # plt.legend()
+        self.graph = FigureCanvasTkAgg(self.figure, self)
+        self.graphWidget = self.graph.get_tk_widget()
+        self.graphWidget.grid(row=2, column=1, padx=0, pady=40, rowspan=15)
 
 
 
