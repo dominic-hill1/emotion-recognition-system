@@ -459,13 +459,58 @@ class Analysis(tk.Frame):
                                   figsize=(5,4),
                                   sharex=False,
                                   sharey=True)
-        # Set titles and labels for both graphs
-        self.ax0.set_xlabel('datetime')
-        self.ax0.set_ylabel(self.firstEmotion.get())
+
+        # Set title for graphs
         self.ax0.set_title('Emotion over time')
 
-        self.ax1.set_xlabel('datetime')
-        self.ax1.set_ylabel(self.secondEmotion.get())
+        # Change X-axes for graphs depending on time format chosen
+        if self.selectedTime.get() == "Day/Month/Year":
+            self.ax0.set_xlabel('Date (Day/Month/Year)')
+            self.ax1.set_xlabel('Date (Day/Month/Year)')
+        elif self.selectedTime.get() == "Hour:Minute":
+            self.ax0.set_xlabel('Time (Hour:Min)')
+            self.ax1.set_xlabel('Time (Hour:Min)')
+        elif self.selectedTime.get() == "Day":
+            self.ax0.set_xlabel('Day')
+            self.ax1.set_xlabel('Day')
+        elif self.selectedTime.get() == "Month":
+            self.ax0.set_xlabel('Month')
+            self.ax1.set_xlabel('Month')
+        elif self.selectedTime.get() == "Year":
+            self.ax0.set_xlabel('Year')
+            self.ax1.set_xlabel('Year')
+        
+        # Set Y-axis for first graph depending on emotion being plotted
+        if self.firstEmotion.get() == "Happy":
+            self.ax0.set_ylabel("Happiness")
+        elif self.firstEmotion.get() == "Sad":
+            self.ax0.set_ylabel("Sadness")
+        elif self.firstEmotion.get() == "Angry":
+            self.ax0.set_ylabel("Anger")
+        elif self.firstEmotion.get() == "Neutral":
+            self.ax0.set_ylabel("Neutrality")
+        elif self.firstEmotion.get() == "Disgust":
+            self.ax0.set_ylabel("Disgust")
+        elif self.firstEmotion.get() == "Fear":
+            self.ax0.set_ylabel("Fear")
+        elif self.firstEmotion.get() == "Surprise":
+            self.ax0.set_ylabel("Surprise")
+        
+        # Set Y-axis for second graph depending on emotion being plotted
+        if self.secondEmotion.get() == "Happy":
+            self.ax1.set_ylabel("Happiness")
+        elif self.secondEmotion.get() == "Sad":
+            self.ax1.set_ylabel("Sadness")
+        elif self.secondEmotion.get() == "Angry":
+            self.ax1.set_ylabel("Anger")
+        elif self.secondEmotion.get() == "Neutral":
+            self.ax1.set_ylabel("Neutrality")
+        elif self.secondEmotion.get() == "Disgust":
+            self.ax1.set_ylabel("Disgust")
+        elif self.secondEmotion.get() == "Fear":
+            self.ax1.set_ylabel("Fear")
+        elif self.secondEmotion.get() == "Surprise":
+            self.ax1.set_ylabel("Surprise") 
 
         # Plot the data from above
         self.ax0.plot(firstCounts, color="g")
