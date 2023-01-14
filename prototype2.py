@@ -55,7 +55,8 @@ class App(tk.Tk):
         if cont == LiveApplication:
             self.geometry("1000x600")
         elif cont == Analysis:
-            self.geometry("1920x1080")
+            # self.geometry("1920x1080")
+            self.geometry("1000x600")
         else:
             self.geometry("400x200")
 
