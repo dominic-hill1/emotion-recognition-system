@@ -1,4 +1,4 @@
-## Emotion recognition system
+## Emotion Recognition System
 A machine learning application to detect emotions from a webcam input. View emotions detected in real-time in an intuitive UI. Perform data analysis on the emotions detected collected over time.
 
 Emotions include:
